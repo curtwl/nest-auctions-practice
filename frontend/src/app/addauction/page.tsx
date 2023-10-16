@@ -1,12 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { useSession } from 'next-auth/react'
 import AuctionForm from '../../components/AuctionForm'
 
 const AddAuction = (props: any) => {
-  const { data: session } = useSession()
-  console.log(session?.user?.id)
+  // const { data: session } = useSession()
+  // console.log(session?.user?.id)
 
   const [submitting, setSubmitting] = useState(false)
   const [itemData, setItemData] = useState({
@@ -45,7 +44,7 @@ const AddAuction = (props: any) => {
     const auctionLength: number = itemData.expiresAt * 24 * 60 * 60 * 1000
 
     try {
-      const response = await fetch('/api/addauction', {
+      const response = await fetch('http://localhost:8080/api/auctions/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -55,16 +54,18 @@ const AddAuction = (props: any) => {
           currentBid: itemData.currentBid,
           description: itemData.description,
           pictures: [itemData.pictures],
-          sellerId: session?.user?.id,
+          sellerId: 1,
           category: itemData.category,
           condition: itemData.condition,
           expiresAt: auctionLength,
         }),
       })
-      if (response.status !== 200) {
+      if (response.status !== 201) {
         console.log(itemData.title, 'title')
+        console.log(response)
         console.log('Something went wrong')
       } else {
+        console.log(response)
         console.log('Item has been listed successfully')
       }
     } catch (error) {
