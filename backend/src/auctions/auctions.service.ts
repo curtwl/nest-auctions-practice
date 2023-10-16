@@ -8,15 +8,50 @@ import { Item, Picture } from '@prisma/client';
 export class AuctionsService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(): Promise<Item[]>{
+  async findAll(): Promise<Item[]> {
     const items = await this.prisma.item.findMany({
       include: { pictures: true },
     });
     return items;
   }
 
-  create(createAuctionDto: CreateAuctionDto) {
-    return 'This action adds a new auction';
+  async create(createAuctionDto: CreateAuctionDto): Promise<Item>  {
+    const {
+      title,
+      buyNowPrice,
+      startingBid,
+      description,
+      pictures,
+      sellerId,
+      category,
+      condition,
+      expiresAt,
+    } = createAuctionDto;
+
+    const currentDate = Date.now();
+    const endDate = new Date(currentDate + expiresAt);
+
+    const newEntry = await this.prisma.item.create({
+      data: {
+        title,
+        buyNowPrice,
+        startingBid,
+        description,
+        pictures: {
+          create: pictures.map((pic) => ({ url: pic })), // add altText later
+        },
+        seller: {
+          connect: {
+            id: sellerId,
+          },
+        },
+        category,
+        condition,
+        expiresAt: endDate,
+      },
+    });
+    console.log(newEntry);
+    return newEntry;
   }
 
   // findOne(id: number) {
