@@ -1,11 +1,11 @@
 import {
   Card,
   CardHeader,
-  CardContent,
+  CardBody,
   CardFooter,
-} from "@/components/ui/card"
-import Link from 'next/link'
-import Image from 'next/image'
+  Image,
+  Link,
+} from '@nextui-org/react'
 
 interface Props {
   itemName: string
@@ -39,7 +39,7 @@ export function AuctionCard({ listing }: any) {
         </small>
         <h4 className='font-bold text-large'>{listing.title}</h4>
       </CardHeader>
-      <CardContent className='overflow-visible py-2'>
+      <CardBody className='overflow-visible py-2'>
         <Link href={`/auctions/${listing.id}`}>
           <Image
             alt='Card background'
@@ -48,7 +48,7 @@ export function AuctionCard({ listing }: any) {
             width={270}
           />
         </Link>
-      </CardContent>
+      </CardBody>
       <CardFooter className='text-medium flex-col items-stretch'>
         <div className='flex flex-row justify-between'>
           <b>Current Bid: ${listing.currentBid}</b>

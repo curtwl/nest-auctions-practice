@@ -3,14 +3,14 @@
 import {
   Card,
   CardHeader,
-  CardContent,
+  CardBody,
   CardFooter,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import Link from 'next/link'
-import Image from 'next/image'
-import { Separator } from "@/components/ui/separator"
-import { Button } from "@/components/ui/button"
+  Divider,
+  Link,
+  Image,
+  Input,
+  Button,
+} from '@nextui-org/react'
 import { useState } from 'react'
 
 export default function AuctionDetailsCard({ data }) {
@@ -56,28 +56,28 @@ export default function AuctionDetailsCard({ data }) {
                 <p className='text-xl font-bold'>Item Details</p>
               </div>
             </CardHeader>
-            <Separator />
-            <CardContent>
+            <Divider />
+            <CardBody>
               <p>Description: {data.description}</p>
-            </CardContent>
-            <Separator />
-            <CardContent>
+            </CardBody>
+            <Divider />
+            <CardBody>
               <p>Condition: {data.condition}</p>
-            </CardContent>
-            <Separator />
-            <CardContent>
+            </CardBody>
+            <Divider />
+            <CardBody>
               <p>Category: {data.category}</p>
-            </CardContent>
-            <Separator />
+            </CardBody>
+            <Divider />
 
-            <CardContent>
+            <CardBody>
               <p>Seller Name: sellername</p>
-            </CardContent>
-            <Separator />
-            <CardContent>
+            </CardBody>
+            <Divider />
+            <CardBody>
               <p>Seller Rating: rating</p>
-            </CardContent>
-            <Separator />
+            </CardBody>
+            <Divider />
           </Card>
         </div>
       </div>
@@ -89,28 +89,28 @@ export default function AuctionDetailsCard({ data }) {
                 <p className='text-xl font-bold'>Bid Information</p>
               </div>
             </CardHeader>
-            <Separator />
-            <CardContent>
+            <Divider />
+            <CardBody>
               <p>Bid Status</p>
-            </CardContent>
-            <Separator />
-            <CardContent>
+            </CardBody>
+            <Divider />
+            <CardBody>
               <p>Starting Bid: ${data.startingBid}</p>
-            </CardContent>
-            <Separator />
-            <CardContent>
+            </CardBody>
+            <Divider />
+            <CardBody>
               <p>Current Bid: ${data.currentBid}</p>
-            </CardContent>
-            <Separator />
-            <CardContent className='flex flex-row justify-between items-center'>
+            </CardBody>
+            <Divider />
+            <CardBody className='flex flex-row justify-between items-center'>
               <p>Buy Now Price: ${data.buyNowPrice}</p>
               <Button color='secondary'> Buy Now</Button>
-            </CardContent>
-            <Separator />
-            <CardContent>
+            </CardBody>
+            <Divider />
+            <CardBody>
               <p>Time Remaining: {data.expiresAt}</p>
-            </CardContent>
-            <Separator />
+            </CardBody>
+            <Divider />
             <div>
               <Input
                 type='text'

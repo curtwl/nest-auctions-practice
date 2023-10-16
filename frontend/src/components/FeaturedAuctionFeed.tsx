@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { AuctionCard } from '../components/AuctionCard'
-import { Input } from "@/components/ui/input"
+import { Input } from '@nextui-org/react'
 import { SearchIcon } from '../../public/assets/icons/SearchIcon'
 import { AuctionCardList } from '../components/AuctionCardList'
 

@@ -12,8 +12,8 @@ datasource db {
 
 model Item {
   id              Int             @default(autoincrement()) @id
-  title           String          @db.VarChar(255)
-  description     String          @db.VarChar(1000)
+  title           String          
+  description     String          
   pictures        Picture[]       @relation("ItemPictures") 
   seller          User            @relation(fields: [sellerId], references: [id], name: "ItemsForSale")
   sellerId        Int
