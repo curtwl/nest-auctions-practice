@@ -10,12 +10,134 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Article {
-  id Int @id @default(autoincrement())
-  title String @unique
-  description String?
-  body String
-  published Boolean @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Item {
+  id              Int             @default(autoincrement()) @id
+  title           String          @db.VarChar(255)
+  description     String          @db.VarChar(1000)
+  pictures        Picture[]       @relation("ItemPictures") 
+  seller          User            @relation(fields: [sellerId], references: [id], name: "ItemsForSale")
+  sellerId        Int
+  sold            Boolean         @default(false)    
+  purchasedBy     User?           @relation(fields: [purchasedById], references: [id], name: "ItemsPurchased")
+  purchasedById   Int?
+  category        String
+  condition       String
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  expiresAt       DateTime? 
+  // move to Auction table?
+  buyNowPrice     Decimal?        @db.Decimal(10,2)
+  startingBid     Decimal         @db.Decimal(10,2)
+  reservePrice    Decimal?        @db.Decimal(10,2)
+  // for currentBid, query for bids and findFirst orderBy desc
+  //currentBid      Decimal?        @db.Decimal(10,2)  // remove?
+  // new fields for auctions; move to Auction table?
+  bidders         User[]
+  bids            Bid[]
+  auctionEnded    Boolean         @default(false)
+  // soldPrice       Decimal?        @db.Decimal(10,2) // query for this instead
+  notifications   Notification[]
+
+  @@index([sellerId])
+  @@index([purchasedById])
 }
+
+model User {
+  id              Int             @id @default(autoincrement())
+  name            String?
+  username        String?         @unique
+  password        String?
+  email           String          @unique
+  emailVerified   DateTime?
+  image           String?
+  // itemsSold     query itemsForSale where sold: true  
+  itemsForSale    Item[]          @relation("ItemsForSale")
+  itemsPurchased  Item[]          @relation("ItemsPurchased")  
+  addresses       Address[]
+  // accounts        Account[]
+  // sessions        Session[]
+  bids            Bid[]
+  biddingOn       Item[]      
+  notifications   Notification[]   
+}
+
+model Bid {
+  id              Int             @id @default(autoincrement())
+  bidAmount       Decimal         @db.Decimal(10,2)
+  item            Item            @relation(fields: [itemId], references: [id])
+  itemId          Int
+  bidder          User            @relation(fields: [bidderId], references: [id])
+  bidderId        Int
+  createdAt       DateTime        @default(now())
+  won             Boolean         @default(false)
+
+  @@index([bidderId])
+  @@index([itemId])
+}
+
+model Notification {
+  id              Int             @id @default(autoincrement())
+  message         String
+  item            Item            @relation(fields: [itemId], references: [id])
+  itemId          Int
+  user            User            @relation(fields: [userId], references: [id])
+  userId          Int
+  createdAt       DateTime        @default(now())
+  isNew           Boolean         @default(true)
+  read           Boolean          @default(false)
+
+  @@index([itemId])
+  @@index([userId])
+}
+
+model Address {
+  id              Int             @id @default(autoincrement())
+  street1         String
+  street2         String?
+  city            String
+  state           String
+  zip             Int
+  addressType     String          // billing or shipping
+  users           User[]
+}
+
+model Picture {
+  id              Int             @id @default(autoincrement())
+  url             String
+  altText         String?                                                                 // delete pics if item deleted
+  item            Item            @relation(fields: [itemId], references: [id], name: "ItemPictures", onDelete: Cascade)
+  itemId          Int
+
+  @@index([itemId])
+}
+
+// // for NextAuth
+// model Account {
+//   id                 String   @id @default(cuid())
+//   user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   userId             Int
+//   type               String
+//   provider           String  
+//   providerAccountId  String   @map("provider_providerAccountId")
+//   refresh_token      String?  @db.Text
+//   access_token       String?  @db.Text
+//   expires_at         Int?
+//   token_type         String?
+//   scope              String?
+//   id_token           String?  @db.Text
+//   session_state      String?
+
+//   @@index([userId])
+//   @@unique([provider, providerAccountId])
+// }
+
+// // for NextAuth
+// model Session {
+//   id           String   @id @default(cuid())
+//   sessionToken String   @unique
+//   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   userId       Int
+//   expires      DateTime
+
+//   @@index([userId])
+// }
